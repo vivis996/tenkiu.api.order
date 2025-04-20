@@ -38,7 +38,7 @@ manage_docker_images() {
 
 # Prompt for the environment file name
 echo "Choose the environment file:"
-echo "1. Production my.template.api"
+echo "1. Production tenkiu.api.order"
 read -p "Enter your choice (1): " ENV_CHOICE
 
 # Set the environment file based on the product's choice
@@ -46,17 +46,17 @@ case $ENV_CHOICE in
     1)
         ENV_FILE="../.env/production.env"
         DOCKER_ENV_FILE="production.env"
-        STACK_NAME="my-template-api"
-        URL_API_HEALTH="https://my.template.api/api/mytemplate/health"
-        URL_REDIRECT="https://my.template.api/api/mytemplate/health"
+        STACK_NAME="tenkiu-api-order"
+        URL_API_HEALTH="https://tenkiu.api.order/api/order/health"
+        URL_REDIRECT="https://tenkiu.api.order/api/order/health"
         ;;
     *)
         echo "Invalid choice. Using default environment file: ../.env/production.env"
         ENV_FILE="../.env/production.env"
         DOCKER_ENV_FILE="production.env"
-        STACK_NAME="my-template-api"
-        URL_API_HEALTH="https://my.template.api/api/mytemplate/health"
-        URL_REDIRECT="https://my.template.api/api/mytemplate/health"
+        STACK_NAME="tenkiu-api-order"
+        URL_API_HEALTH="https://tenkiu.api.order/api/order/health"
+        URL_REDIRECT="https://tenkiu.api.order/api/order/health"
         ;;
 esac
 
@@ -65,7 +65,7 @@ MY_DOCKER_REGISTRY="192.168.0.106:5000"
 
 # Define the repository and image names
 REPO="vivisvivi"
-IMAGE_API="my.template.api"
+IMAGE_API="tenkiu.api.order"
 
 # Read the values of API_TAG from the chosen environment file
 API_TAG=$(read_value_from_env "$ENV_FILE" "API_TAG")

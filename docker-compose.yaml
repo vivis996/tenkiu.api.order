@@ -1,6 +1,6 @@
 services:
   davm-yourls-ai:
-    image: vivisvivi/my.template.api:${API_TAG}
+    image: vivisvivi/tenkiu.api.order:${API_TAG}
     container_name: ${API_CONTAINER_NAME}
     # build:
     #   context: .

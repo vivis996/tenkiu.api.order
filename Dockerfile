@@ -11,17 +11,17 @@ WORKDIR /src
 # 192.168.0.106 -> dvrp2.local
 RUN dotnet nuget add source "http://192.168.0.106:6100/v3/index.json" -n LocalNugets
 
-COPY ["my.template.api/my.template.api.csproj", "my.template.api/"]
-RUN dotnet restore "my.template.api/my.template.api.csproj"
+COPY ["tenkiu.api.order/tenkiu.api.order.csproj", "tenkiu.api.order/"]
+RUN dotnet restore "tenkiu.api.order/tenkiu.api.order.csproj"
 COPY . .
-WORKDIR "/src/my.template.api"
-RUN dotnet build "my.template.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/tenkiu.api.order"
+RUN dotnet build "tenkiu.api.order.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "my.template.api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "tenkiu.api.order.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "my.template.api.dll"]
+ENTRYPOINT ["dotnet", "tenkiu.api.order.dll"]
