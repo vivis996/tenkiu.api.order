@@ -1,0 +1,30 @@
+# .editorconfig for C# projects
+
+# Set the root directory
+root = true
+
+# Define the code style for C# files
+[*.cs]
+
+# Use spaces for indentation (4 spaces per indent)
+indent_style = space
+indent_size = 2
+
+# End each file with a newline
+insert_final_newline = true
+
+# Ensure UTF-8 encoding
+charset = utf-8
+
+# Specify maximum line length
+max_line_length = 120
+
+# Set the line endings to LF (Unix-style)
+end_of_line = lf
+
+# Define the code style for C# files
+[*.cshtml]
+
+# Use spaces for indentation (4 spaces per indent)
+indent_style = space
+indent_size = 2

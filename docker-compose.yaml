@@ -1,0 +1,20 @@
+services:
+  davm-yourls-ai:
+    image: vivisvivi/my.template.api:${API_TAG}
+    container_name: ${API_CONTAINER_NAME}
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    #   args:
+    #     - BUILD_CONFIGURATION=${BUILD_CONFIGURATION}
+    ports:
+      - "${API_PORT}:80"
+    restart: always
+    env_file:
+      - .env/production.env
+    networks:
+      - nginx-master.network
+
+networks:
+  nginx-master.network:
+    external: true

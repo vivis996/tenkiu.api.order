@@ -1,0 +1,52 @@
+name: CI - Build and Test
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - beta
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  DOTNET_INSTALL_DIR: "./.dotnet"
+
+jobs:
+  build:
+    # Run on a self-hosted runner
+    runs-on: self-hosted
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up .NET SDK (specifically .NET 8)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Display the current .NET version
+      - name: Display dotnet version
+        run: dotnet --version
+
+      # Remove existing NuGet source if it exists
+      - name: Remove existing NuGet source
+        run: dotnet nuget remove source LocalNugets || echo "No existing source to remove"
+
+      # Add the local NuGet source
+      - name: Add NuGet source
+        run: dotnet nuget add source "http://192.168.0.106:6100/v3/index.json" -n LocalNugets
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Build the solution
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      # Run tests
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal

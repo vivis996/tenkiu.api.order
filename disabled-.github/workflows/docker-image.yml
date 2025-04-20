@@ -1,0 +1,31 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main", "beta", ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      API_TAG: ${{ secrets.API_TAG }}
+      DOCKER_REGISTRY: "192.168.0.106:5000"
+      NAME_IMAGE: "my.template.api"
+    steps:
+      - uses: actions/checkout@v4
+
+      # Load API_TAG from .env/production.env
+      - name: Load API_TAG
+        run: echo "API_TAG=$(grep -oP 'API_TAG=\K.*' .env/production.env)" >> $GITHUB_ENV
+
+      # Build the Docker image with API_TAG as the tag
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag vivisvivi/$NAME_IMAGE:${{ env.API_TAG }}
+
+      # Tag the Docker image with the new repository and tag format
+      - name: Tag Docker image
+        run: docker tag vivisvivi/$NAME_IMAGE:${{ env.API_TAG }} $DOCKER_REGISTRY/vivisvivi/$NAME_IMAGE:${{ env.API_TAG }}
+
+      # Push the Docker image to the new Docker Registry IP address
+      - name: Push Docker image
+        run: docker push $DOCKER_REGISTRY/vivisvivi/$NAME_IMAGE:${{ env.API_TAG }}
