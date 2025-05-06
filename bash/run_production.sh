@@ -47,16 +47,16 @@ case $ENV_CHOICE in
         ENV_FILE="../.env/production.env"
         DOCKER_ENV_FILE="production.env"
         STACK_NAME="tenkiu-api-order"
-        URL_API_HEALTH="https://tenkiu.api.order/api/order/health"
-        URL_REDIRECT="https://tenkiu.api.order/api/order/health"
+        URL_API_HEALTH="https://tenkiu.shop/api/order/health"
+        URL_REDIRECT="https://tenkiu.shop/api/order/health"
         ;;
     *)
         echo "Invalid choice. Using default environment file: ../.env/production.env"
         ENV_FILE="../.env/production.env"
         DOCKER_ENV_FILE="production.env"
         STACK_NAME="tenkiu-api-order"
-        URL_API_HEALTH="https://tenkiu.api.order/api/order/health"
-        URL_REDIRECT="https://tenkiu.api.order/api/order/health"
+        URL_API_HEALTH="https://tenkiu.shop/api/order/health"
+        URL_REDIRECT="https://tenkiu.shop/api/order/health"
         ;;
 esac
 
