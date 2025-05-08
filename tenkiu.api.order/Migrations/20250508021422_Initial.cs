@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -20,7 +21,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Exchange_Rate",
                 columns: table => new
                 {
-                    ID_Exchange_Rate = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Exchange_Rate = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Currency_Origen = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Currency_Destination = table.Column<int>(type: "int(11)", nullable: false),
                     Exchange_Rate = table.Column<decimal>(type: "decimal(10,4)", precision: 10, scale: 4, nullable: false),
@@ -40,11 +42,14 @@ namespace tenkiu.api.order.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    ID_Order = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Order = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Delivery_season = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, collation: "utf8mb4_general_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Delivery_Date = table.Column<DateOnly>(type: "date", nullable: false),
                     ID_Client = table.Column<int>(type: "int(11)", nullable: false),
+                    hash = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Created_by = table.Column<int>(type: "int(11)", nullable: false),
                     Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "current_timestamp()"),
                     Modified_by = table.Column<int>(type: "int(11)", nullable: true),
@@ -61,7 +66,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Shipping_Types",
                 columns: table => new
                 {
-                    ID_Shipping_Type = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Shipping_Type = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, collation: "utf8mb4_general_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Web_site = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_general_ci")
@@ -124,7 +130,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Order_Details",
                 columns: table => new
                 {
-                    ID_Order_Details = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Order_Details = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Order = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Product = table.Column<int>(type: "int(11)", nullable: false),
                     Listed_Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
@@ -157,7 +164,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Payment_History",
                 columns: table => new
                 {
-                    ID_Payment_History = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Payment_History = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     ID_Currency = table.Column<int>(type: "int(11)", nullable: false),
                     ID_User = table.Column<int>(type: "int(11)", nullable: false),
@@ -187,7 +195,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Shipping",
                 columns: table => new
                 {
-                    ID_Shipping = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Shipping = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Order = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Shipping_Type = table.Column<int>(type: "int(11)", nullable: false),
                     Guide_Number = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, collation: "utf8mb4_general_ci")
@@ -215,7 +224,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Relation_Order_Status",
                 columns: table => new
                 {
-                    ID_Relation_Order_Status = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Relation_Order_Status = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Order = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Status_Order = table.Column<int>(type: "int(11)", nullable: false),
                     Date_Relation = table.Column<DateOnly>(type: "date", nullable: false),
@@ -247,7 +257,8 @@ namespace tenkiu.api.order.Migrations
                 name: "Relation_Order_Details_Status",
                 columns: table => new
                 {
-                    ID_Relation_ODS = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Relation_ODS = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Order_Details = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Status_Product = table.Column<int>(type: "int(11)", nullable: false),
                     Date_Relation = table.Column<DateOnly>(type: "date", nullable: false),
@@ -280,17 +291,17 @@ namespace tenkiu.api.order.Migrations
                 columns: new[] { "ID_Status_Order", "Created_by", "Created_dt", "Description", "Modified_by", "Modified_dt", "Name" },
                 values: new object[,]
                 {
-                    { 1, 0, DateTime.UtcNow, "Order has been created in the system.", null, null, "Created" },
-                    { 2, 0, DateTime.UtcNow, "Order initialization is complete and awaiting confirmation.", null, null, "Initialized" },
-                    { 3, 0, DateTime.UtcNow, "Order has been confirmed by the customer or system.", null, null, "Confirmed" },
-                    { 4, 0, DateTime.UtcNow, "Order is being processed and items are being prepared.", null, null, "Processing" },
-                    { 5, 0, DateTime.UtcNow, "Order items have been packed and are ready for shipping.", null, null, "Packed" },
-                    { 6, 0, DateTime.UtcNow, "Order has been shipped to the delivery address.", null, null, "Shipped" },
-                    { 7, 0, DateTime.UtcNow, "Order is out for delivery with the carrier.", null, null, "OutForDelivery" },
-                    { 8, 0, DateTime.UtcNow, "Order has been delivered to the recipient.", null, null, "Delivered" },
-                    { 9, 0, DateTime.UtcNow, "Order has been cancelled and will not be fulfilled.", null, null, "Cancelled" },
-                    { 10, 0, DateTime.UtcNow, "Order has been returned by the customer.", null, null, "Returned" },
-                    { 11, 0, DateTime.UtcNow, "Order payment has been refunded.", null, null, "Refunded" }
+                  { 1, 0, DateTime.UtcNow, "Order has been created in the system.", null, null, "Created" },
+                  { 2, 0, DateTime.UtcNow, "Order initialization is complete and awaiting confirmation.", null, null, "Initialized" },
+                  { 3, 0, DateTime.UtcNow, "Order has been confirmed by the customer or system.", null, null, "Confirmed" },
+                  { 4, 0, DateTime.UtcNow, "Order is being processed and items are being prepared.", null, null, "Processing" },
+                  { 5, 0, DateTime.UtcNow, "Order items have been packed and are ready for shipping.", null, null, "Packed" },
+                  { 6, 0, DateTime.UtcNow, "Order has been shipped to the delivery address.", null, null, "Shipped" },
+                  { 7, 0, DateTime.UtcNow, "Order is out for delivery with the carrier.", null, null, "OutForDelivery" },
+                  { 8, 0, DateTime.UtcNow, "Order has been delivered to the recipient.", null, null, "Delivered" },
+                  { 9, 0, DateTime.UtcNow, "Order has been cancelled and will not be fulfilled.", null, null, "Cancelled" },
+                  { 10, 0, DateTime.UtcNow, "Order has been returned by the customer.", null, null, "Returned" },
+                  { 11, 0, DateTime.UtcNow, "Order payment has been refunded.", null, null, "Refunded" }
                 });
 
             migrationBuilder.InsertData(
@@ -298,15 +309,15 @@ namespace tenkiu.api.order.Migrations
                 columns: new[] { "ID_Status_Order_Detail", "Created_by", "Created_dt", "Description", "Modified_by", "Modified_dt", "Name" },
                 values: new object[,]
                 {
-                    { 1, 0, DateTime.UtcNow, "Product is pending purchase.", null, null, "Pending" },
-                    { 2, 0, DateTime.UtcNow, "Product purchase has been completed.", null, null, "Purchased" },
-                    { 3, 0, DateTime.UtcNow, "Product is being prepared for shipment.", null, null, "InPreparation" },
-                    { 4, 0, DateTime.UtcNow, "Product has been packaged.", null, null, "Packed" },
-                    { 5, 0, DateTime.UtcNow, "Product is in transit to the destination.", null, null, "InTransit" },
-                    { 6, 0, DateTime.UtcNow, "Product has been delivered to the recipient.", null, null, "Delivered" },
-                    { 7, 0, DateTime.UtcNow, "Product order has been cancelled.", null, null, "Cancelled" },
-                    { 8, 0, DateTime.UtcNow, "Product has been returned by the customer.", null, null, "Returned" },
-                    { 9, 0, DateTime.UtcNow, "Product is on backorder due to stock unavailability.", null, null, "Backordered" }
+                  { 1, 0, DateTime.UtcNow, "Product is pending purchase.", null, null, "Pending" },
+                  { 2, 0, DateTime.UtcNow, "Product purchase has been completed.", null, null, "Purchased" },
+                  { 3, 0, DateTime.UtcNow, "Product is being prepared for shipment.", null, null, "InPreparation" },
+                  { 4, 0, DateTime.UtcNow, "Product has been packaged.", null, null, "Packed" },
+                  { 5, 0, DateTime.UtcNow, "Product is in transit to the destination.", null, null, "InTransit" },
+                  { 6, 0, DateTime.UtcNow, "Product has been delivered to the recipient.", null, null, "Delivered" },
+                  { 7, 0, DateTime.UtcNow, "Product order has been cancelled.", null, null, "Cancelled" },
+                  { 8, 0, DateTime.UtcNow, "Product has been returned by the customer.", null, null, "Returned" },
+                  { 9, 0, DateTime.UtcNow, "Product is on backorder due to stock unavailability.", null, null, "Backordered" }
                 });
 
             migrationBuilder.CreateIndex(

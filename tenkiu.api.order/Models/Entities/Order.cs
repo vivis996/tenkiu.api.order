@@ -20,6 +20,10 @@ public class Order : DbModel<int>
   [Column("ID_Client", TypeName = "int(11)")]
   public int IdClient { get; set; }
 
+  [Column("hash")]
+  [StringLength(32)]
+  public string Hash { get; set; }
+
   [InverseProperty("Order")]
   public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
