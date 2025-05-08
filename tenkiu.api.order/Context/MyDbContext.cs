@@ -22,17 +22,16 @@ public partial class MyDbContext : DbContext, IDbContext
 
   public virtual DbSet<ExchangeRate> ExchangeRates { get; set; }
 
-  public virtual DbSet<Order> Orders { get; set; }
-
-  public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-
-  public virtual DbSet<PaymentHistory> PaymentHistories { get; set; }
+  public virtual DbSet<SellOrder> SellOrders { get; set; }
+  public virtual DbSet<BuyOrder> BuyOrders { get; set; }
+  public virtual DbSet<SellOrderDetail> SellOrderDetails { get; set; }
+  public virtual DbSet<BuyOrderDetail> BuyOrderDetails { get; set; }
+  public virtual DbSet<BuySellAllocation> BuySellAllocations { get; set; }
+  public virtual DbSet<SellOrderPaymentHistory> SellOrderPaymentHistories { get; set; }
 
   public virtual DbSet<RelationOrderDetailsStatus> RelationOrderDetailsStatuses { get; set; }
-
-  public virtual DbSet<RelationOrderStatus> RelationOrderStatuses { get; set; }
-
-  public virtual DbSet<Shipping> Shippings { get; set; }
+  public virtual DbSet<SellOrderStatusRelation> SellOrderStatusRelations { get; set; }
+  public virtual DbSet<SellOrderShipping> SellOrderShippings { get; set; }
 
   public virtual DbSet<ShippingType> ShippingTypes { get; set; }
 
@@ -48,10 +47,6 @@ public partial class MyDbContext : DbContext, IDbContext
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-    modelBuilder
-      .UseCollation("utf8mb4_general_ci")
-      .HasCharSet("utf8mb4");
-
     modelBuilder.Entity<ExchangeRate>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -60,7 +55,7 @@ public partial class MyDbContext : DbContext, IDbContext
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
     });
 
-    modelBuilder.Entity<Order>(entity =>
+    modelBuilder.Entity<SellOrder>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -68,24 +63,24 @@ public partial class MyDbContext : DbContext, IDbContext
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
     });
 
-    modelBuilder.Entity<OrderDetail>(entity =>
+    modelBuilder.Entity<SellOrderDetail>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
       entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails).HasConstraintName("Order_Details_ibfk_1");
+      entity.HasOne(d => d.SellOrder).WithMany(p => p.SellOrderDetails).HasConstraintName("Sell_Order_Details_ibfk_1");
     });
 
-    modelBuilder.Entity<PaymentHistory>(entity =>
+    modelBuilder.Entity<SellOrderPaymentHistory>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
       entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.HasOne(d => d.Order).WithMany(p => p.PaymentHistories).HasConstraintName("Payment_History_ibfk_1");
+      entity.HasOne(d => d.SellOrder).WithMany(p => p.SellOrderPaymentHistories).HasConstraintName("Payment_History_ibfk_1");
     });
 
     modelBuilder.Entity<RelationOrderDetailsStatus>(entity =>
@@ -95,19 +90,19 @@ public partial class MyDbContext : DbContext, IDbContext
       entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.HasOne(d => d.OrderDetail).WithMany(p => p.RelationOrderDetailsStatuses).HasConstraintName("Relation_Order_Details_Status_ibfk_1");
+      entity.HasOne(d => d.SellOrderDetail).WithMany(p => p.RelationOrderDetailsStatuses).HasConstraintName("Relation_Order_Details_Status_ibfk_1");
 
       entity.HasOne(d => d.StatusOrderDetail).WithMany(p => p.RelationOrderDetailsStatuses).HasConstraintName("Relation_Order_Details_Status_ibfk_2");
     });
 
-    modelBuilder.Entity<RelationOrderStatus>(entity =>
+    modelBuilder.Entity<SellOrderStatusRelation>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
       entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.HasOne(d => d.Order).WithMany(p => p.RelationOrderStatuses).HasConstraintName("Relation_Order_Status_ibfk_1");
+      entity.HasOne(d => d.SellOrder).WithMany(p => p.SellOrderStatusRelations).HasConstraintName("Relation_Order_Status_ibfk_1");
 
       entity.HasOne(d => d.StatusOrder).WithMany(p => p.RelationOrderStatuses).HasConstraintName("Relation_Order_Status_ibfk_2");
       
@@ -117,14 +112,14 @@ public partial class MyDbContext : DbContext, IDbContext
           .HasPrincipalKey(s => s.Id);
     });
 
-    modelBuilder.Entity<Shipping>(entity =>
+    modelBuilder.Entity<SellOrderShipping>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
       entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.HasOne(d => d.Order).WithMany(p => p.Shippings).HasConstraintName("Shipping_ibfk_1");
+      entity.HasOne(d => d.SellOrder).WithMany(p => p.SellOrderShippings).HasConstraintName("Shipping_ibfk_1");
     });
 
     modelBuilder.Entity<ShippingType>(entity =>
@@ -155,6 +150,35 @@ public partial class MyDbContext : DbContext, IDbContext
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.Property(e => e.Id);
+    });
+
+    modelBuilder.Entity<BuyOrder>(entity =>
+    {
+      entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+      entity.Property(e => e.Id);
+      entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
+    });
+
+    modelBuilder.Entity<BuyOrderDetail>(entity =>
+    {
+      entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+      entity.HasOne(d => d.BuyOrder)
+            .WithMany(p => p.BuyOrderDetails)
+            .HasConstraintName("Buy_Order_Details_ibfk_1");
+    });
+
+    modelBuilder.Entity<BuySellAllocation>(entity =>
+    {
+      entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+      entity.HasOne(d => d.BuyOrderDetail)
+            .WithMany(p => p.BuySellAllocations)
+            .HasConstraintName("BuySell_Allocation_ibfk_1");
+      entity.HasOne(d => d.SellOrderDetail)
+            .WithMany(p => p.BuySellAllocations)
+            .HasConstraintName("BuySell_Allocation_ibfk_2");
     });
 
     this.InitSeedValues(modelBuilder);

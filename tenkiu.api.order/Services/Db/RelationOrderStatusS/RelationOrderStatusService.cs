@@ -1,10 +1,10 @@
-using tenkiu.api.order.Repositories.RelationOrderStatusRepo;
+using tenkiu.api.order.Repositories.RelationSellOrderStatusRepo;
 using vm.common;
 
 namespace tenkiu.api.order.Services.Db.RelationOrderStatusS;
 
 public class RelationOrderStatusService(
-  IRelationOrderStatusRepository repository
+  IRelationSellOrderStatusRepository repository
 ) : DisposableBase, IRelationOrderStatusService
 {
   protected override void DisposeResources()
