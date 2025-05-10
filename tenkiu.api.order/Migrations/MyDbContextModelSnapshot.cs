@@ -27,8 +27,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.ExchangeRate", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Exchange_Rate");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -70,8 +73,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Order");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -92,6 +98,12 @@ namespace tenkiu.api.order.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Delivery_season");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)")
+                        .HasColumnName("hash");
 
                     b.Property<int>("IdClient")
                         .HasColumnType("int(11)")
@@ -114,8 +126,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Order_Details");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -189,8 +204,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.PaymentHistory", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Payment_History");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(10, 2)
@@ -246,8 +264,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.RelationOrderDetailsStatus", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Relation_ODS");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -292,8 +313,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.RelationOrderStatus", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Relation_Order_Status");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -339,8 +363,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.Shipping", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Shipping");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -389,8 +416,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.ShippingType", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Shipping_Type");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -470,7 +500,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(410),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been created in the system.",
                             Name = "Created"
                         },
@@ -478,7 +508,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(410),
+                            CreatedDt = DateTime.Now,
                             Description = "Order initialization is complete and awaiting confirmation.",
                             Name = "Initialized"
                         },
@@ -486,7 +516,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(410),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been confirmed by the customer or system.",
                             Name = "Confirmed"
                         },
@@ -494,7 +524,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(410),
+                            CreatedDt = DateTime.Now,
                             Description = "Order is being processed and items are being prepared.",
                             Name = "Processing"
                         },
@@ -502,7 +532,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(410),
+                            CreatedDt = DateTime.Now,
                             Description = "Order items have been packed and are ready for shipping.",
                             Name = "Packed"
                         },
@@ -510,7 +540,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 6,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been shipped to the delivery address.",
                             Name = "Shipped"
                         },
@@ -518,7 +548,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 7,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order is out for delivery with the carrier.",
                             Name = "OutForDelivery"
                         },
@@ -526,7 +556,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 8,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been delivered to the recipient.",
                             Name = "Delivered"
                         },
@@ -534,7 +564,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 9,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been cancelled and will not be fulfilled.",
                             Name = "Cancelled"
                         },
@@ -542,7 +572,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 10,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order has been returned by the customer.",
                             Name = "Returned"
                         },
@@ -550,7 +580,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 11,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(420),
+                            CreatedDt = DateTime.Now,
                             Description = "Order payment has been refunded.",
                             Name = "Refunded"
                         });
@@ -600,7 +630,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product is pending purchase.",
                             Name = "Pending"
                         },
@@ -608,7 +638,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product purchase has been completed.",
                             Name = "Purchased"
                         },
@@ -616,7 +646,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product is being prepared for shipment.",
                             Name = "InPreparation"
                         },
@@ -624,7 +654,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product has been packaged.",
                             Name = "Packed"
                         },
@@ -632,7 +662,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product is in transit to the destination.",
                             Name = "InTransit"
                         },
@@ -640,7 +670,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 6,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product has been delivered to the recipient.",
                             Name = "Delivered"
                         },
@@ -648,7 +678,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 7,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product order has been cancelled.",
                             Name = "Cancelled"
                         },
@@ -656,7 +686,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 8,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product has been returned by the customer.",
                             Name = "Returned"
                         },
@@ -664,7 +694,7 @@ namespace tenkiu.api.order.Migrations
                         {
                             Id = 9,
                             CreatedBy = 0,
-                            CreatedDt = new DateTime(2025, 4, 20, 20, 17, 56, 282, DateTimeKind.Utc).AddTicks(560),
+                            CreatedDt = DateTime.Now,
                             Description = "Product is on backorder due to stock unavailability.",
                             Name = "Backordered"
                         });

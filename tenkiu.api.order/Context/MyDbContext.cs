@@ -5,7 +5,7 @@ using tenkiu.api.order.Models;
 
 namespace tenkiu.api.order.Context;
 
-public partial class MyDbContext : DbContext
+public partial class MyDbContext : DbContext, IDbContext
 {
   private readonly IDbConnection _dbConnection;
 
@@ -56,7 +56,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
     });
 
@@ -64,7 +64,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
     });
 
@@ -72,7 +72,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails).HasConstraintName("Order_Details_ibfk_1");
@@ -82,7 +82,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.HasOne(d => d.Order).WithMany(p => p.PaymentHistories).HasConstraintName("Payment_History_ibfk_1");
@@ -92,7 +92,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.HasOne(d => d.OrderDetail).WithMany(p => p.RelationOrderDetailsStatuses).HasConstraintName("Relation_Order_Details_Status_ibfk_1");
@@ -104,7 +104,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.HasOne(d => d.Order).WithMany(p => p.RelationOrderStatuses).HasConstraintName("Relation_Order_Status_ibfk_1");
@@ -121,7 +121,7 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
       entity.HasOne(d => d.Order).WithMany(p => p.Shippings).HasConstraintName("Shipping_ibfk_1");
@@ -131,30 +131,30 @@ public partial class MyDbContext : DbContext
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
     });
 
     modelBuilder.Entity<StatusOrder>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
     });
 
     modelBuilder.Entity<StatusOrderDetail>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
       entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
 
-      entity.Property(e => e.Id).ValueGeneratedNever();
+      entity.Property(e => e.Id);
     });
 
     this.InitSeedValues(modelBuilder);
