@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using tenkiu.api.order.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using vm.common.db.Models;
@@ -7,8 +6,8 @@ using vm.common.db.Models;
 namespace tenkiu.api.order.Models.Entities;
 
 [Table("Relation_Order_Details_Status")]
-[Index("IdOrderDetails", Name = "ID_Order_Details")]
-[Index("IdStatusProduct", Name = "ID_Status_Product")]
+[Index("SellOrderDetailId", Name = "ID_Order_Details")]
+[Index("StatusOrderDetailId", Name = "ID_Status_Product")]
 public class RelationOrderDetailsStatus : DbModel<int>
 {
   [Key]
@@ -16,19 +15,19 @@ public class RelationOrderDetailsStatus : DbModel<int>
   public override int Id { get; set; }
 
   [Column("ID_Order_Details", TypeName = "int(11)")]
-  public int IdOrderDetails { get; set; }
+  public int SellOrderDetailId { get; set; }
 
   [Column("ID_Status_Product", TypeName = "int(11)")]
-  public OrderStatusDetail IdStatusProduct { get; set; }
+  public OrderStatusDetail StatusOrderDetailId { get; set; }
 
   [Column("Date_Relation")]
   public DateOnly DateRelation { get; set; }
 
-  [ForeignKey("IdOrderDetails")]
+  [ForeignKey("SellOrderDetailId")]
   [InverseProperty("RelationOrderDetailsStatuses")]
-  public virtual OrderDetail OrderDetail { get; set; }
+  public virtual SellOrderDetail SellOrderDetail { get; set; }
 
-  [ForeignKey("IdStatusProduct")]
+  [ForeignKey("StatusOrderDetailId")]
   [InverseProperty("RelationOrderDetailsStatuses")]
   public virtual StatusOrderDetail StatusOrderDetail { get; set; }
 }

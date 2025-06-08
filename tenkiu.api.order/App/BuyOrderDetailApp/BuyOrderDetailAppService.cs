@@ -1,11 +1,11 @@
-using tenkiu.api.order.Services.Db.SellOrderPaymentHistoryS;
+using tenkiu.api.order.Services.Db.BuyOrderDetailS;
 using vm.common;
 
-namespace tenkiu.api.order.App.PaymentHistoryApp;
+namespace tenkiu.api.order.App.BuyOrderDetailApp;
 
-public class PaymentHistoryAppService(
-  ISellOrderPaymentHistoryService service
-) : DisposableBase, IPaymentHistoryAppService
+public class BuyOrderDetailAppService(
+  IBuyOrderDetailService service
+) : DisposableBase, IBuyOrderDetailAppService
 {
   /// <summary>
   /// Disposes of resources managed by this service.

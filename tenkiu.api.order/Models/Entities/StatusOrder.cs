@@ -18,6 +18,6 @@ public class StatusOrder : DbModel<OrderStatus>
   public string Description { get; set; }
 
   [InverseProperty("StatusOrder")]
-  public virtual ICollection<RelationOrderStatus> RelationOrderStatuses { get; set; } = new List<RelationOrderStatus>();
+  public virtual ICollection<SellOrderStatusRelation> RelationOrderStatuses { get; set; } = new List<SellOrderStatusRelation>();
 }
 
