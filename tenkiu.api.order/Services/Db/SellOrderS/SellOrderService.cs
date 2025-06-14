@@ -57,7 +57,11 @@ public class SellOrderService(
   private Expression<Func<SellOrder, bool>> GetPredicate(SellOrderSearchRequest request)
   {
     return v =>
-      (request.IdClient == null || v.IdClient == request.IdClient);
+      (request.IdClient == null || v.IdClient == request.IdClient) &&
+      (request.DeliveryPeriodId == null || v.DeliveryPeriodId == request.DeliveryPeriodId) &&
+      (request.DeliveryPeriod == null ||
+       (v.DeliveryDate.ToDateTime(TimeOnly.MinValue).Date >= request.DeliveryPeriod.Start.Date &&
+        v.DeliveryDate.ToDateTime(TimeOnly.MaxValue).Date <= request.DeliveryPeriod.End.Date));
   }
 
   private Expression<Func<SellOrder, object>>? GetOrderBy(SellOrderSearchRequest request)

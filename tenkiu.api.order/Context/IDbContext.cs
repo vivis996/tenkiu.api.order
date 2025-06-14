@@ -18,4 +18,5 @@ public interface IDbContext : vm.common.db.Context.IDbContext
   DbSet<ShippingType> ShippingTypes { get; set; }
   DbSet<StatusOrder> StatusOrders { get; set; }
   DbSet<StatusOrderDetail> StatusOrderDetails { get; set; }
+  DbSet<DeliveryPeriod> DeliveryPeriods { get; set; }
 }

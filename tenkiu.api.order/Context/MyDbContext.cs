@@ -38,6 +38,7 @@ public partial class MyDbContext : DbContext, IDbContext
   public virtual DbSet<StatusOrder> StatusOrders { get; set; }
 
   public virtual DbSet<StatusOrderDetail> StatusOrderDetails { get; set; }
+  public virtual DbSet<DeliveryPeriod> DeliveryPeriods { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {
@@ -179,6 +180,19 @@ public partial class MyDbContext : DbContext, IDbContext
       entity.HasOne(d => d.SellOrderDetail)
             .WithMany(p => p.BuySellAllocations)
             .HasConstraintName("BuySell_Allocation_ibfk_2");
+    });
+
+    modelBuilder.Entity<DeliveryPeriod>(entity =>
+    {
+      entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+      entity.Property(e => e.Id);
+      entity.Property(e => e.CreatedDt).HasDefaultValueSql("current_timestamp()");
+
+      entity.HasMany(d => d.SellOrders)
+            .WithOne(p => p.DeliveryPeriod)
+            .HasForeignKey(p => p.DeliveryPeriodId)
+            .HasConstraintName("Delivery_Periods_ibfk_1");
     });
 
     this.InitSeedValues(modelBuilder);

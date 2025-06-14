@@ -1,10 +1,13 @@
 using AutoMapper;
+using tenkiu.api.order.Models.Common;
 using tenkiu.api.order.Models.Dto.BuyOrder;
 using tenkiu.api.order.Models.Dto.BuyOrderDetail;
+using tenkiu.api.order.Models.Dto.DeliveryPeriod;
 using tenkiu.api.order.Models.Dto.SellOrder;
 using tenkiu.api.order.Models.Dto.SellOrderDetail;
 using tenkiu.api.order.Models.Entities;
 using vm.common.Utils;
+using System;
 
 namespace tenkiu.api.order;
 
@@ -16,6 +19,7 @@ public class AutomapperProfile : Profile
     this.MapSellOrderDetailsToDtos();
     this.MapBuyOrderToDtos();
     this.MapBuyOrderDetailsToDtos();
+    this.MapDeliveryPeriodToDtos();
   }
 
   private void MapBuyOrderToDtos()
@@ -90,5 +94,36 @@ public class AutomapperProfile : Profile
 
     this.CreateMap<SellOrderDetail, ResponseSellOrderDetailDto>()
       .IncludeBase<SellOrderDetail, BaseSellOrderDetailDto>();
+  }
+
+  private void MapDeliveryPeriodToDtos()
+  {
+    this.CreateMap<DeliveryPeriod, BaseDeliveryPeriodDto>()
+      .IgnoreAllNonExisting()
+      .ForMember(dest => dest.Period, opt => opt.MapFrom(src => new DateTimePeriod(
+          src.StartDate.ToDateTime(TimeOnly.MinValue),
+          src.EndDate.ToDateTime(TimeOnly.MinValue)
+      )));
+
+    this.CreateMap<DeliveryPeriod, CreateDeliveryPeriodDto>()
+      .IncludeBase<DeliveryPeriod, BaseDeliveryPeriodDto>();
+
+    this.CreateMap<DeliveryPeriod, UpdateDeliveryPeriodDto>()
+      .IncludeBase<DeliveryPeriod, BaseDeliveryPeriodDto>();
+
+    this.CreateMap<DeliveryPeriod, ResponseDeliveryPeriodDto>()
+      .IncludeBase<DeliveryPeriod, BaseDeliveryPeriodDto>();
+    
+    //Inverse mapping for DeliveryPeriod
+    this.CreateMap<BaseDeliveryPeriodDto, DeliveryPeriod>()
+      .IgnoreAllNonExisting()
+      .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Period.Start)))
+      .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Period.End)));
+
+    this.CreateMap<CreateDeliveryPeriodDto, DeliveryPeriod>()
+      .IncludeBase<BaseDeliveryPeriodDto, DeliveryPeriod>();
+    
+    this.CreateMap<UpdateDeliveryPeriodDto, DeliveryPeriod>()
+      .IncludeBase<BaseDeliveryPeriodDto, DeliveryPeriod>();
   }
 }
