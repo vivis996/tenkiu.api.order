@@ -11,7 +11,7 @@ namespace tenkiu.api.order.App.BuyOrderApp;
 
 public class BuyOrderAppService(
   IBuyOrderService service,
-  IBuyOrderDetailService orderDetailService,
+  IBuyOrderDetailService buyOrderDetailService,
   IMapper mapper
 ) : DisposableBase, IBuyOrderAppService
 {
@@ -45,7 +45,7 @@ public class BuyOrderAppService(
     value.OrderDetails = [];
     var order = mapper.Map<BuyOrder>(value);
     var @object = await service.Create(order);
-    var orderDetails = await orderDetailService.Create(order.Id, orderDetailDtos);
+    var orderDetails = await buyOrderDetailService.Create(order.Id, orderDetailDtos);
     if (orderDetails is null || !orderDetails.Any() || orderDetails.Count() != orderDetailDtos.Count())
       return new FailureResponse<int>("Failed to create order details");
     return new SuccessResponse<int>(@object.Id);
@@ -58,7 +58,7 @@ public class BuyOrderAppService(
       return new FailureResponse<bool>("Order details cannot be empty");
     value.OrderDetails = [];
     var @object = await service.Update(value);
-    var orderDetails = await orderDetailService.Update(@object.Id, orderDetailDtos);
+    var orderDetails = await buyOrderDetailService.Update(@object.Id, orderDetailDtos);
 
     return new SuccessResponse<bool>(@object is not null);
   }
@@ -70,6 +70,6 @@ public class BuyOrderAppService(
   {
     // Dispose of the service to release unmanaged resources
     service.Dispose();
-    orderDetailService.Dispose();
+    buyOrderDetailService.Dispose();
   }
 }

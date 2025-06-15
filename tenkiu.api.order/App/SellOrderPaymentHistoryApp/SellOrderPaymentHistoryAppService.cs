@@ -3,9 +3,9 @@ using vm.common;
 
 namespace tenkiu.api.order.App.PaymentHistoryApp;
 
-public class PaymentHistoryAppService(
+public class SellOrderPaymentHistoryAppService(
   ISellOrderPaymentHistoryService service
-) : DisposableBase, IPaymentHistoryAppService
+) : DisposableBase, ISellOrderPaymentHistoryAppService
 {
   /// <summary>
   /// Disposes of resources managed by this service.

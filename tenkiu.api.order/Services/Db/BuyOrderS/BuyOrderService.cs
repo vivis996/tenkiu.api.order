@@ -53,8 +53,8 @@ public class BuyOrderService(
       return v =>
           (request.IdStore == null || v.IdStore == request.IdStore) &&
           (request.PurchasePeriod == null ||
-              (v.PurchaseDate.ToDateTime(TimeOnly.MinValue) >= request.PurchasePeriod.Start &&
-               v.PurchaseDate.ToDateTime(TimeOnly.MaxValue) <= request.PurchasePeriod.End));
+              (v.PurchaseDate.ToDateTime(TimeOnly.MinValue).Date >= request.PurchasePeriod.Start.Date &&
+               v.PurchaseDate.ToDateTime(TimeOnly.MaxValue).Date <= request.PurchasePeriod.End.Date));
   }
 
   private Expression<Func<BuyOrder, object>>? GetOrderBy(BuyOrderSearchRequest request)

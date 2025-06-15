@@ -26,24 +26,12 @@ public class SellOrderDetail : DbModel<int>
 
   [Column("ID_Currency_Sell", TypeName = "int(11)")]
   public int IdCurrencySell { get; set; }
-
-  [Column("Sell_Exchange_Rate")]
-  [Precision(18, 8)]
-  public decimal SellExchangeRate { get; set; }
-
-  [Column("Converted_Sell_Price")]
-  [Precision(18, 2)]
-  public decimal ConvertedSellPrice { get; private set; }
   
   /// <summary>
   /// Number of units sold.
   /// </summary>
   [Column(TypeName = "int(11)")]
   public int Quantity { get; set; }
-
-  [Column("Profit_Base")]
-  [Precision(18, 2)]
-  public decimal ProfitBase { get; private set; }
 
   [ForeignKey("SellOrderId")]
   [InverseProperty("SellOrderDetails")]

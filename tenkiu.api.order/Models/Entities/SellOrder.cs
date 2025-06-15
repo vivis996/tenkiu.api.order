@@ -11,9 +11,8 @@ public class SellOrder : DbModel<int>
   [Column("ID_Sell_Order", TypeName = "int(11)")]
   public override int Id { get; set; }
 
-  [Column("Delivery_season")]
-  [StringLength(50)]
-  public string DeliverySeason { get; set; }
+  [Column("ID_Delivery_Period", TypeName = "int(11)")]
+  public int DeliveryPeriodId { get; set; }
 
   [Column("Delivery_Date")]
   public DateOnly DeliveryDate { get; set; }
@@ -27,6 +26,10 @@ public class SellOrder : DbModel<int>
 
   [Column("Base_Currency_Id", TypeName = "int(11)")]
   public int BaseCurrencyId { get; set; }
+
+  [ForeignKey("DeliveryPeriodId")]
+  [InverseProperty("SellOrders")]
+  public virtual DeliveryPeriod DeliveryPeriod { get; set; }
 
   [InverseProperty("SellOrder")]
   public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; }

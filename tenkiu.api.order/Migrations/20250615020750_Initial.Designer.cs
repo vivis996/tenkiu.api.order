@@ -12,7 +12,7 @@ using tenkiu.api.order.Context;
 namespace tenkiu.api.order.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20250607030003_Initial")]
+    [Migration("20250615020750_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -193,6 +193,54 @@ namespace tenkiu.api.order.Migrations
                     b.ToTable("BuySell_Allocation");
                 });
 
+            modelBuilder.Entity("tenkiu.api.order.Models.Entities.DeliveryPeriod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int(11)")
+                        .HasColumnName("ID_Delivery_Period");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("Created_by");
+
+                    b.Property<DateTime>("CreatedDt")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("Created_dt");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date")
+                        .HasColumnName("End_Date");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("Is_Active");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("Modified_by");
+
+                    b.Property<DateTime?>("ModifiedDt")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("Modified_dt");
+
+                    b.Property<string>("PeriodName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Period_Name");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
+                        .HasColumnName("Start_Date");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Delivery_Periods");
+                });
+
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.ExchangeRate", b =>
                 {
                     b.Property<int>("Id")
@@ -315,11 +363,9 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Delivery_Date");
 
-                    b.Property<string>("DeliverySeason")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Delivery_season");
+                    b.Property<int>("DeliveryPeriodId")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("ID_Delivery_Period");
 
                     b.Property<string>("Hash")
                         .IsRequired()
@@ -342,6 +388,8 @@ namespace tenkiu.api.order.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
+                    b.HasIndex("DeliveryPeriodId");
+
                     b.ToTable("Sell_Order");
                 });
 
@@ -353,11 +401,6 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnName("ID_Sell_Order_Details");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("ConvertedSellPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Converted_Sell_Price");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int(11)")
@@ -385,18 +428,8 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("timestamp")
                         .HasColumnName("Modified_dt");
 
-                    b.Property<decimal>("ProfitBase")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Profit_Base");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int(11)");
-
-                    b.Property<decimal>("SellExchangeRate")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)")
-                        .HasColumnName("Sell_Exchange_Rate");
 
                     b.Property<int>("SellOrderId")
                         .HasColumnType("int(11)")
@@ -918,6 +951,17 @@ namespace tenkiu.api.order.Migrations
                     b.Navigation("StatusOrderDetail");
                 });
 
+            modelBuilder.Entity("tenkiu.api.order.Models.Entities.SellOrder", b =>
+                {
+                    b.HasOne("tenkiu.api.order.Models.Entities.DeliveryPeriod", "DeliveryPeriod")
+                        .WithMany("SellOrders")
+                        .HasForeignKey("DeliveryPeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryPeriod");
+                });
+
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.SellOrderDetail", b =>
                 {
                     b.HasOne("tenkiu.api.order.Models.Entities.SellOrder", "SellOrder")
@@ -983,6 +1027,11 @@ namespace tenkiu.api.order.Migrations
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.BuyOrderDetail", b =>
                 {
                     b.Navigation("BuySellAllocations");
+                });
+
+            modelBuilder.Entity("tenkiu.api.order.Models.Entities.DeliveryPeriod", b =>
+                {
+                    b.Navigation("SellOrders");
                 });
 
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.SellOrder", b =>

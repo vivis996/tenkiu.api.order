@@ -4,7 +4,7 @@ using vm.common;
 namespace tenkiu.api.order.Services.Db.SellOrderPaymentHistoryS;
 
 public class SellOrderPaymentHistoryService(
-  ISellOrderPaymentHistoryRepo repository
+  ISellOrderPaymentHistoryRepository repository
 ) : DisposableBase, ISellOrderPaymentHistoryService
 {
   protected override void DisposeResources()
