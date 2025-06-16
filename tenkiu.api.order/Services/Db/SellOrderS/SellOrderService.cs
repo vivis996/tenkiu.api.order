@@ -35,6 +35,18 @@ public class SellOrderService(
     return (values, request.Count ?? 0);
   }
 
+  public Task<bool> IsClientWithOneDeliveryPeriod(int clientId, int deliveryPeriodId)
+  {
+    return IsClientWithOneDeliveryPeriod(clientId, deliveryPeriodId, 0); 
+  }
+
+  public async Task<bool> IsClientWithOneDeliveryPeriod(int clientId, int deliveryPeriodId, int orderId)
+  {
+    var count = (await repository.GetList(o => o.IdClient == clientId && o.DeliveryPeriodId == deliveryPeriodId &&
+                                               o.Id != orderId, o => 1, null)).Sum();
+    return count > 0;
+  }
+
   public async Task<SellOrder> Create(SellOrder value)
   {
     var newValue = await repository.Create(value);
