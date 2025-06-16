@@ -51,6 +51,9 @@ public class SellOrderAppService(
     var orderDetailDtos = value.OrderDetails ?? [];
     if (!orderDetailDtos.Any())
       return new FailureResponse<int>("Order details cannot be empty");
+    var isClientWithOneDeliveryPeriod = await service.IsClientWithOneDeliveryPeriod(value.IdClient, value.DeliveryPeriodId);
+    if (isClientWithOneDeliveryPeriod)
+      return new FailureResponse<int>("Client already has an order with this delivery period");
     value.OrderDetails = [];
     var order = mapper.Map<SellOrder>(value);
     order.Hash = string.Empty;
@@ -66,6 +69,9 @@ public class SellOrderAppService(
     var orderDetailDtos = value.OrderDetails ?? [];
     if (!orderDetailDtos.Any())
       return new FailureResponse<bool>("Order details cannot be empty");
+    var isClientWithOneDeliveryPeriod = await service.IsClientWithOneDeliveryPeriod(value.IdClient, value.DeliveryPeriodId, value.Id);
+    if (isClientWithOneDeliveryPeriod)
+      return new FailureResponse<bool>("Client already has an order with this delivery period");
     value.OrderDetails = [];
     var @object = await service.Update(value);
     var orderDetails = await sellOrderDetailService.Update(@object.Id, orderDetailDtos);
