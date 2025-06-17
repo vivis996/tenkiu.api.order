@@ -12,7 +12,7 @@ using tenkiu.api.order.Context;
 namespace tenkiu.api.order.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20250615020750_Initial")]
+    [Migration("20250622233226_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -207,8 +207,10 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnName("Created_by");
 
                     b.Property<DateTime>("CreatedDt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp")
-                        .HasColumnName("Created_dt");
+                        .HasColumnName("Created_dt")
+                        .HasDefaultValueSql("current_timestamp()");
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date")
@@ -236,7 +238,8 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Start_Date");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
 
                     b.ToTable("Delivery_Periods");
                 });
@@ -385,6 +388,11 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("timestamp")
                         .HasColumnName("Modified_dt");
 
+                    b.Property<decimal>("TotalSellPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("Total_Sell_Price");
+
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
@@ -471,13 +479,13 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnName("Created_dt")
                         .HasDefaultValueSql("current_timestamp()");
 
+                    b.Property<int>("IdClient")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("ID_Client");
+
                     b.Property<int>("IdCurrency")
                         .HasColumnType("int(11)")
                         .HasColumnName("ID_Currency");
-
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int(11)")
-                        .HasColumnName("ID_User");
 
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int(11)")
@@ -491,20 +499,32 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("varchar(255)")
                         .HasColumnName("Notes");
 
+                    b.Property<DateOnly>("PaymentDate")
+                        .HasColumnType("date")
+                        .HasColumnName("Payment_Date");
+
+                    b.Property<int>("PaymentDirection")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("Payment_Direction");
+
+                    b.Property<int>("PaymentReason")
+                        .HasColumnType("int(11)")
+                        .HasColumnName("Payment_Reason");
+
                     b.Property<int>("PaymentType")
                         .HasColumnType("int(11)")
                         .HasColumnName("Payment_Type");
 
                     b.Property<int>("SellOrderId")
                         .HasColumnType("int(11)")
-                        .HasColumnName("ID_Order");
+                        .HasColumnName("ID_Sell_Order");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.HasIndex(new[] { "SellOrderId" }, "ID_Order");
+                    b.HasIndex("SellOrderId");
 
-                    b.ToTable("Payment_History");
+                    b.ToTable("Sell_Order_Payment_History");
                 });
 
             modelBuilder.Entity("tenkiu.api.order.Models.Entities.SellOrderShipping", b =>
@@ -554,8 +574,7 @@ namespace tenkiu.api.order.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.HasIndex(new[] { "SellOrderId" }, "ID_Order")
-                        .HasDatabaseName("ID_Order1");
+                    b.HasIndex(new[] { "SellOrderId" }, "ID_Order");
 
                     b.ToTable("Shipping");
                 });
@@ -603,7 +622,7 @@ namespace tenkiu.api.order.Migrations
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "SellOrderId" }, "ID_Order")
-                        .HasDatabaseName("ID_Order2");
+                        .HasDatabaseName("ID_Order1");
 
                     b.HasIndex(new[] { "IdStatusOrder" }, "ID_Status_Order");
 
@@ -957,7 +976,8 @@ namespace tenkiu.api.order.Migrations
                         .WithMany("SellOrders")
                         .HasForeignKey("DeliveryPeriodId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Delivery_Periods_ibfk_1");
 
                     b.Navigation("DeliveryPeriod");
                 });

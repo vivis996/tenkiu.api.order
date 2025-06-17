@@ -5,9 +5,9 @@ using tenkiu.api.order.Models.Dto.BuyOrderDetail;
 using tenkiu.api.order.Models.Dto.DeliveryPeriod;
 using tenkiu.api.order.Models.Dto.SellOrder;
 using tenkiu.api.order.Models.Dto.SellOrderDetail;
+using tenkiu.api.order.Models.Dto.SellOrderPaymentHistory;
 using tenkiu.api.order.Models.Entities;
 using vm.common.Utils;
-using System;
 
 namespace tenkiu.api.order;
 
@@ -17,6 +17,7 @@ public class AutomapperProfile : Profile
   {
     this.MapSellOrderToDtos();
     this.MapSellOrderDetailsToDtos();
+    this.MapSellOrderPaymentHistoryToDtos();
     this.MapBuyOrderToDtos();
     this.MapBuyOrderDetailsToDtos();
     this.MapDeliveryPeriodToDtos();
@@ -125,5 +126,25 @@ public class AutomapperProfile : Profile
     
     this.CreateMap<UpdateDeliveryPeriodDto, DeliveryPeriod>()
       .IncludeBase<BaseDeliveryPeriodDto, DeliveryPeriod>();
+  }
+
+  private void MapSellOrderPaymentHistoryToDtos()
+  {
+    this.CreateMap<SellOrderPaymentHistory, BaseSellOrderPaymentHistoryDto>()
+        .IgnoreAllNonExisting();
+    
+    this.CreateMap<BaseSellOrderPaymentHistoryDto, SellOrderPaymentHistory>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<CreateSellOrderPaymentHistoryDto, SellOrderPaymentHistory>()
+        .IncludeBase<BaseSellOrderPaymentHistoryDto, SellOrderPaymentHistory>()
+        .ForMember(dest => dest.IdClient, opt => opt.MapFrom(src => src.IdClient))
+        .ForMember(dest => dest.SellOrderId, opt => opt.MapFrom(src => src.SellOrderId));
+
+    this.CreateMap<SellOrderPaymentHistory, UpdateSellOrderPaymentHistoryDto>()
+        .IncludeBase<SellOrderPaymentHistory, BaseSellOrderPaymentHistoryDto>();
+
+    this.CreateMap<SellOrderPaymentHistory, ResponseSellOrderPaymentHistoryDto>()
+        .IncludeBase<SellOrderPaymentHistory, BaseSellOrderPaymentHistoryDto>();
   }
 }
