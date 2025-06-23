@@ -5,8 +5,7 @@ using vm.common.db.Models;
 
 namespace tenkiu.api.order.Models.Entities;
 
-[Table("Payment_History")]
-[Index("SellOrderId", Name = "ID_Order")]
+[Table("Sell_Order_Payment_History")]
 public class SellOrderPaymentHistory : DbModel<int>
 {
   [Key]
@@ -19,10 +18,16 @@ public class SellOrderPaymentHistory : DbModel<int>
   [Column("ID_Currency", TypeName = "int(11)")]
   public int IdCurrency { get; set; }
 
-  [Column("ID_User", TypeName = "int(11)")]
-  public int IdUser { get; set; }
+  [Column("ID_Client", TypeName = "int(11)")]
+  public int IdClient { get; set; }
 
-  [Column("ID_Order", TypeName = "int(11)")]
+  [Column("Payment_Direction", TypeName = "int(11)")]
+  public PaymentDirection PaymentDirection { get; set; }
+
+  [Column("Payment_Reason", TypeName = "int(11)")]
+  public PaymentReason PaymentReason { get; set; }
+
+  [Column("ID_Sell_Order", TypeName = "int(11)")]
   public int SellOrderId { get; set; }
 
   [Column("Payment_Type", TypeName = "int(11)")]
@@ -30,6 +35,9 @@ public class SellOrderPaymentHistory : DbModel<int>
 
   [Column("Notes", TypeName = "varchar(255)")]
   public string? Notes { get; set; }
+
+  [Column("Payment_Date")]
+  public DateOnly PaymentDate { get; set; }
 
   [ForeignKey("SellOrderId")]
   [InverseProperty("SellOrderPaymentHistories")]

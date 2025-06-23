@@ -3,6 +3,7 @@ using tenkiu.api.order.Models.Dto.SellOrder;
 using tenkiu.api.order.Models.Entities;
 using tenkiu.api.order.Models.Request;
 using tenkiu.api.order.Services.Db.SellOrderDetailS;
+using tenkiu.api.order.Services.Db.SellOrderPaymentHistoryS;
 using tenkiu.api.order.Services.Db.SellOrderS;
 using vm.common;
 using vm.common.api.Models;
@@ -12,33 +13,55 @@ namespace tenkiu.api.order.App.SellOrderApp;
 public class SellOrderAppService(
   ISellOrderService service,
   ISellOrderDetailService sellOrderDetailService,
+  ISellOrderPaymentHistoryService sellOrderPaymentHistoryService,
   IMapper mapper
 ) : DisposableBase, ISellOrderAppService
 {
+  /// <summary>
+  /// Retrieves an order by its unique identifier.
+  /// </summary>
+  /// <param name="id">The ID of the order to retrieve.</param>
+  /// <returns>A response containing the order data if found, or a failure message if not.</returns>
   public async Task<BaseResponse<ResponseSellOrderDto?>> GetById(int id)
   {
-    var order = await service.GetById(id);
-    if (order is null)
+    var value = await service.GetById(id);
+    if (value is null)
       return new FailureResponse<ResponseSellOrderDto?>("Order not found");
+    var order = mapper.Map<ResponseSellOrderDto>(value);
+    await this.GetAndSetBalanceBySellOrderId(order);
 
-    return new SuccessResponse<ResponseSellOrderDto?>(mapper.Map<ResponseSellOrderDto>(order));
+    return new SuccessResponse<ResponseSellOrderDto?>(order);
   }
 
+  /// <summary>
+  /// Retrieves an order by its unique hash.
+  /// </summary>
+  /// <param name="hash">The hash of the order to retrieve.</param>
+  /// <returns>A response containing the order data if found, or a failure message if not.</returns>
   public async Task<BaseResponse<ResponseSellOrderDto?>> GetByHash(string hash)
   {
-    var order = await service.GetByHash(hash);
-    if (order is null)
+    var value = await service.GetByHash(hash);
+    if (value is null)
       return new FailureResponse<ResponseSellOrderDto?>("Order not found");
+    var order = mapper.Map<ResponseSellOrderDto>(value);
+    await this.GetAndSetBalanceBySellOrderId(order);
 
-    return new SuccessResponse<ResponseSellOrderDto?>(mapper.Map<ResponseSellOrderDto>(order));
+    return new SuccessResponse<ResponseSellOrderDto?>(order);
   }
 
+  /// <summary>
+  /// Searches for orders with pagination based on the provided criteria.
+  /// </summary>
+  /// <param name="searchRequest">The search and pagination parameters.</param>
+  /// <returns>A response containing a paginated list of orders matching the criteria.</returns>
   public async Task<BaseResponse<PaginationResponse<ResponseSellOrderDto>>> GetByRequestPagination(SellOrderSearchRequest searchRequest)
   {
     searchRequest.PageSize ??= 10;
     searchRequest.PageNumber ??= 1;
     (var values, var count) = await service.GetByRequestPagination(searchRequest);
-    return new SuccessResponse<PaginationResponse<ResponseSellOrderDto>>(new (mapper.Map<IEnumerable<ResponseSellOrderDto>>(values))
+    var orders = mapper.Map<ResponseSellOrderDto[]>(values);
+    await this.GetAndSetBalanceBySellOrderId(orders);
+    return new SuccessResponse<PaginationResponse<ResponseSellOrderDto>>(new (orders)
     {
       Count = count,
       PageNumber = searchRequest.PageNumber,
@@ -46,6 +69,11 @@ public class SellOrderAppService(
     });
   }
 
+  /// <summary>
+  /// Creates a new order in the system.
+  /// </summary>
+  /// <param name="value">The order data to create.</param>
+  /// <returns>A response containing the ID of the created order, or a failure message if creation fails.</returns>
   public async Task<BaseResponse<int>> Create(CreateSellOrderDto value)
   {
     var orderDetailDtos = value.OrderDetails ?? [];
@@ -64,6 +92,11 @@ public class SellOrderAppService(
     return new SuccessResponse<int>(@object.Id);
   }
 
+  /// <summary>
+  /// Updates an existing order's data.
+  /// </summary>
+  /// <param name="value">The updated order data.</param>
+  /// <returns>A response indicating whether the update was successful.</returns>
   public async Task<BaseResponse<bool>> Update(UpdateSellOrderDto value)
   {
     var orderDetailDtos = value.OrderDetails ?? [];
@@ -78,6 +111,22 @@ public class SellOrderAppService(
 
     return new SuccessResponse<bool>(@object is not null);
   }
+
+  private async Task GetAndSetBalanceBySellOrderId(params ResponseSellOrderDto[] sellOrders)
+  {
+    var sellOrderIds = sellOrders.Select(x => x.Id).ToArray();
+    var balancesRelation = await sellOrderPaymentHistoryService.GetBalanceBySellOrderId(sellOrderIds);
+    foreach (var order in sellOrders)
+    {
+      if (!balancesRelation.TryGetValue(order.Id, out var balance))
+        continue;
+      order.Balances = balance;
+      var balanceCurrency = balance.FirstOrDefault(x => x.IdCurrency == order.BaseCurrencyId);
+      if (balanceCurrency is null)
+        continue;
+      order.Balance = order.TotalSellPrice - balanceCurrency.Balance;
+    }
+  }
   
   /// <summary>
   /// Disposes of resources managed by this service.
@@ -87,5 +136,6 @@ public class SellOrderAppService(
     // Dispose of the service to release unmanaged resources
     service.Dispose();
     sellOrderDetailService.Dispose();
+    sellOrderPaymentHistoryService.Dispose();
   }
 }

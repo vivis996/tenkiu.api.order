@@ -51,13 +51,13 @@ namespace tenkiu.api.order.Migrations
                     Start_Date = table.Column<DateOnly>(type: "date", nullable: false),
                     End_Date = table.Column<DateOnly>(type: "date", nullable: false),
                     Created_by = table.Column<int>(type: "int(11)", nullable: false),
-                    Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "current_timestamp()"),
                     Modified_by = table.Column<int>(type: "int(11)", nullable: true),
                     Modified_dt = table.Column<DateTime>(type: "timestamp", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Delivery_Periods", x => x.ID_Delivery_Period);
+                    table.PrimaryKey("PRIMARY", x => x.ID_Delivery_Period);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -184,6 +184,7 @@ namespace tenkiu.api.order.Migrations
                     ID_Client = table.Column<int>(type: "int(11)", nullable: false),
                     hash = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Total_Sell_Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Base_Currency_Id = table.Column<int>(type: "int(11)", nullable: false),
                     Created_by = table.Column<int>(type: "int(11)", nullable: false),
                     Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "current_timestamp()"),
@@ -194,40 +195,10 @@ namespace tenkiu.api.order.Migrations
                 {
                     table.PrimaryKey("PRIMARY", x => x.ID_Sell_Order);
                     table.ForeignKey(
-                        name: "FK_Sell_Order_Delivery_Periods_ID_Delivery_Period",
+                        name: "Delivery_Periods_ibfk_1",
                         column: x => x.ID_Delivery_Period,
                         principalTable: "Delivery_Periods",
                         principalColumn: "ID_Delivery_Period",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Payment_History",
-                columns: table => new
-                {
-                    ID_Payment_History = table.Column<int>(type: "int(11)", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Amount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    ID_Currency = table.Column<int>(type: "int(11)", nullable: false),
-                    ID_User = table.Column<int>(type: "int(11)", nullable: false),
-                    ID_Order = table.Column<int>(type: "int(11)", nullable: false),
-                    Payment_Type = table.Column<int>(type: "int(11)", nullable: false),
-                    Notes = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Created_by = table.Column<int>(type: "int(11)", nullable: false),
-                    Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "current_timestamp()"),
-                    Modified_by = table.Column<int>(type: "int(11)", nullable: true),
-                    Modified_dt = table.Column<DateTime>(type: "timestamp", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PRIMARY", x => x.ID_Payment_History);
-                    table.ForeignKey(
-                        name: "Payment_History_ibfk_1",
-                        column: x => x.ID_Order,
-                        principalTable: "Sell_Order",
-                        principalColumn: "ID_Sell_Order",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -285,6 +256,39 @@ namespace tenkiu.api.order.Migrations
                     table.PrimaryKey("PRIMARY", x => x.ID_Sell_Order_Details);
                     table.ForeignKey(
                         name: "Sell_Order_Details_ibfk_1",
+                        column: x => x.ID_Sell_Order,
+                        principalTable: "Sell_Order",
+                        principalColumn: "ID_Sell_Order",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Sell_Order_Payment_History",
+                columns: table => new
+                {
+                    ID_Payment_History = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Amount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    ID_Currency = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Client = table.Column<int>(type: "int(11)", nullable: false),
+                    Payment_Direction = table.Column<int>(type: "int(11)", nullable: false),
+                    Payment_Reason = table.Column<int>(type: "int(11)", nullable: false),
+                    ID_Sell_Order = table.Column<int>(type: "int(11)", nullable: false),
+                    Payment_Type = table.Column<int>(type: "int(11)", nullable: false),
+                    Notes = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Payment_Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Created_by = table.Column<int>(type: "int(11)", nullable: false),
+                    Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "current_timestamp()"),
+                    Modified_by = table.Column<int>(type: "int(11)", nullable: true),
+                    Modified_dt = table.Column<DateTime>(type: "timestamp", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.ID_Payment_History);
+                    table.ForeignKey(
+                        name: "Payment_History_ibfk_1",
                         column: x => x.ID_Sell_Order,
                         principalTable: "Sell_Order",
                         principalColumn: "ID_Sell_Order",
@@ -434,11 +438,6 @@ namespace tenkiu.api.order.Migrations
                 column: "ID_Sell_Order_Detail");
 
             migrationBuilder.CreateIndex(
-                name: "ID_Order",
-                table: "Payment_History",
-                column: "ID_Order");
-
-            migrationBuilder.CreateIndex(
                 name: "ID_Order_Details",
                 table: "Relation_Order_Details_Status",
                 column: "ID_Order_Details");
@@ -449,7 +448,7 @@ namespace tenkiu.api.order.Migrations
                 column: "ID_Status_Product");
 
             migrationBuilder.CreateIndex(
-                name: "ID_Order2",
+                name: "ID_Order1",
                 table: "Relation_Order_Status",
                 column: "ID_Order");
 
@@ -469,7 +468,12 @@ namespace tenkiu.api.order.Migrations
                 column: "ID_Sell_Order");
 
             migrationBuilder.CreateIndex(
-                name: "ID_Order1",
+                name: "IX_Sell_Order_Payment_History_ID_Sell_Order",
+                table: "Sell_Order_Payment_History",
+                column: "ID_Sell_Order");
+
+            migrationBuilder.CreateIndex(
+                name: "ID_Order",
                 table: "Shipping",
                 column: "ID_Order");
         }
@@ -484,13 +488,13 @@ namespace tenkiu.api.order.Migrations
                 name: "Exchange_Rate");
 
             migrationBuilder.DropTable(
-                name: "Payment_History");
-
-            migrationBuilder.DropTable(
                 name: "Relation_Order_Details_Status");
 
             migrationBuilder.DropTable(
                 name: "Relation_Order_Status");
+
+            migrationBuilder.DropTable(
+                name: "Sell_Order_Payment_History");
 
             migrationBuilder.DropTable(
                 name: "Shipping");

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using vm.common.db.Models;
 
 namespace tenkiu.api.order.Models.Entities;
@@ -23,6 +24,10 @@ public class SellOrder : DbModel<int>
   [Column("hash")]
   [StringLength(32)]
   public string Hash { get; set; }
+
+  [Column("Total_Sell_Price")]
+  [Precision(10, 2)]
+  public decimal TotalSellPrice { get; set; }
 
   [Column("Base_Currency_Id", TypeName = "int(11)")]
   public int BaseCurrencyId { get; set; }
