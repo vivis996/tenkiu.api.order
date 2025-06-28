@@ -118,13 +118,17 @@ public class SellOrderAppService(
     var balancesRelation = await sellOrderPaymentHistoryService.GetBalanceBySellOrderId(sellOrderIds);
     foreach (var order in sellOrders)
     {
-      if (!balancesRelation.TryGetValue(order.Id, out var balance))
-        continue;
-      order.Balances = balance;
-      var balanceCurrency = balance.FirstOrDefault(x => x.IdCurrency == order.BaseCurrencyId);
-      if (balanceCurrency is null)
-        continue;
-      order.Balance = order.TotalSellPrice - balanceCurrency.Balance;
+      // Try to get the list of balances; if none, fall back to TotalSellPrice
+      balancesRelation.TryGetValue(order.Id, out var balances);
+      order.Balances = balances;
+
+      // Find the balance entry matching this order's currency
+      var currencyEntry = balances?.FirstOrDefault(b => b.IdCurrency == order.BaseCurrencyId);
+
+      // If we didn’t find one, or there were no balances at all, use the full price
+      order.Balance = currencyEntry is null
+        ? order.TotalSellPrice
+        : order.TotalSellPrice - currencyEntry.Balance;
     }
   }
   
