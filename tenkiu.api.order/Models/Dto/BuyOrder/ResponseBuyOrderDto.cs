@@ -10,6 +10,7 @@ public class ResponseBuyOrderDto : BaseBuyOrderDto, IIdModel<int>
   /// </summary>
   public int Id { get; set; }
 
+  public int TotalQuantity { get; set; }
   /// <summary>
   /// Collection of detail line items for this purchase order
   /// </summary>
