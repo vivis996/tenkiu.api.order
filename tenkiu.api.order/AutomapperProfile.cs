@@ -40,6 +40,7 @@ public class AutomapperProfile : Profile
 
     this.CreateMap<BuyOrder, ResponseBuyOrderDto>()
         .ForMember(v => v.OrderDetails, opt => opt.MapFrom(v => v.BuyOrderDetails))
+        .ForMember(v => v.TotalQuantity, opt => opt.MapFrom(v => v.BuyOrderDetails.Sum(o => o.Quantity)))
         .IncludeBase<BuyOrder, BaseBuyOrderDto>();
   }
 
@@ -77,6 +78,7 @@ public class AutomapperProfile : Profile
 
     this.CreateMap<SellOrder, ResponseSellOrderDto>()
       .ForMember(v => v.OrderDetails, opt => opt.MapFrom(v => v.SellOrderDetails))
+      .ForMember(v => v.TotalQuantity, opt => opt.MapFrom(v => v.SellOrderDetails.Sum(o => o.Quantity)))
       .IncludeBase<SellOrder, BaseSellOrderDto>();
   }
 
