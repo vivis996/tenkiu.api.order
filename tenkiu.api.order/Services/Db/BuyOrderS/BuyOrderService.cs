@@ -49,12 +49,12 @@ public class BuyOrderService(
 
   private Expression<Func<BuyOrder, bool>> GetPredicate(BuyOrderSearchRequest request)
   {
-      // Compare DateOnly PurchaseDate by converting to DateTime
-      return v =>
-          (request.IdStore == null || v.IdStore == request.IdStore) &&
-          (request.PurchasePeriod == null ||
-              (v.PurchaseDate.ToDateTime(TimeOnly.MinValue).Date >= request.PurchasePeriod.Start.Date &&
-               v.PurchaseDate.ToDateTime(TimeOnly.MaxValue).Date <= request.PurchasePeriod.End.Date));
+    // Compare DateOnly PurchaseDate by converting to DateTime
+    return v =>
+      (request.IdStore == null || v.IdStore == request.IdStore) &&
+      (request.PurchasePeriod == null ||
+        (v.PurchaseDate.ToDateTime(TimeOnly.MinValue).Date >= request.PurchasePeriod.Start.Date &&
+           v.PurchaseDate.ToDateTime(TimeOnly.MaxValue).Date <= request.PurchasePeriod.End.Date));
   }
 
   private Expression<Func<BuyOrder, object>>? GetOrderBy(BuyOrderSearchRequest request)

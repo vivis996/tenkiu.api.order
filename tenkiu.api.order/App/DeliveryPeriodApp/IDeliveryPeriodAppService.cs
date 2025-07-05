@@ -6,6 +6,7 @@ namespace tenkiu.api.order.App.DeliveryPeriodApp;
 public interface IDeliveryPeriodAppService : IDisposable
 {
   Task<BaseResponse<ResponseDeliveryPeriodDto?>> GetById(int id);
+  Task<BaseResponse<IEnumerable<ResponseDeliveryPeriodDto>>> GetByIds(IEnumerable<int> ids);
   Task<BaseResponse<IEnumerable<ResponseDeliveryPeriodDto>>> GetAll();
   Task<BaseResponse<IEnumerable<ResponseDeliveryPeriodDto>>> GetOnlyActive();
   Task<BaseResponse<ResponseDeliveryPeriodDto>> Create(CreateDeliveryPeriodDto deliveryPeriod);

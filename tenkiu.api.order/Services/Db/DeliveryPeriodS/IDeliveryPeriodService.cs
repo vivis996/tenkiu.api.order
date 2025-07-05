@@ -6,6 +6,7 @@ namespace tenkiu.api.order.Services.Db.DeliveryPeriodS;
 public interface IDeliveryPeriodService : IDisposable
 {
   Task<DeliveryPeriod?> GetById(int id);
+  Task<IEnumerable<DeliveryPeriod>> GetByIds(IEnumerable<int> ids);
   Task<IEnumerable<DeliveryPeriod>> GetAll();
   Task<IEnumerable<DeliveryPeriod>> GetOnlyActive();
   Task<DeliveryPeriod> Create(DeliveryPeriod deliveryPeriod);

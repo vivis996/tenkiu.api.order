@@ -28,6 +28,18 @@ public class DeliveryPeriodController(
   }
 
   /// <summary>
+  /// Retrieves multiple delivery periods by their unique identifiers.
+  /// </summary>
+  [HttpGet("ids")]
+  [AuthorizeJwt(UserType.Admin)]
+  [ProducesResponseType(typeof(SuccessResponse<IEnumerable<ResponseDeliveryPeriodDto>>), StatusCodes.Status200OK)]
+  [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status500InternalServerError)]
+  public async Task<BaseResponse<IEnumerable<ResponseDeliveryPeriodDto>>> GetByIds([FromQuery] int[] ids)
+  {
+    return await service.GetByIds(ids);
+  }
+
+  /// <summary>
   /// Retrieves all delivery periods.
   /// </summary>
   [HttpGet]
@@ -86,6 +98,7 @@ public class DeliveryPeriodController(
   {
     return await service.Delete(id);
   }
+
   /// <summary>
   /// Disposes of resources managed by this controller.
   /// </summary>
