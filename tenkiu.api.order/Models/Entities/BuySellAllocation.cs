@@ -18,7 +18,7 @@ public class BuySellAllocation : DbModel<int>
   public int SellOrderDetailId { get; set; }
 
   [Column("Quantity")]
-  public decimal Quantity { get; set; }
+  public int Quantity { get; set; }
 
   [ForeignKey("BuyOrderDetailId")]
   [InverseProperty("BuySellAllocations")]

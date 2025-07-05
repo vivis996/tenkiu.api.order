@@ -175,8 +175,8 @@ namespace tenkiu.api.order.Migrations
                         .HasColumnType("timestamp")
                         .HasColumnName("Modified_dt");
 
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(65,30)")
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
                         .HasColumnName("Quantity");
 
                     b.Property<int>("SellOrderDetailId")

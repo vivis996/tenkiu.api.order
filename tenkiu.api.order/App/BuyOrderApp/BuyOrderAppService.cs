@@ -21,7 +21,7 @@ public class BuyOrderAppService(
     if (order is null)
       return new FailureResponse<ResponseBuyOrderDto?>("Order not found");
 
-    return new SuccessResponse<ResponseBuyOrderDto?>(mapper.Map<ResponseBuyOrderDto>(order));
+    return new SuccessResponse<ResponseBuyOrderDto?>(order);
   }
 
   public async Task<BaseResponse<PaginationResponse<ResponseBuyOrderDto>>> GetByRequestPagination(BuyOrderSearchRequest searchRequest)
@@ -29,7 +29,7 @@ public class BuyOrderAppService(
     searchRequest.PageSize ??= 10;
     searchRequest.PageNumber ??= 1;
     (var values, var count) = await service.GetByRequestPagination(searchRequest);
-    return new SuccessResponse<PaginationResponse<ResponseBuyOrderDto>>(new (mapper.Map<IEnumerable<ResponseBuyOrderDto>>(values))
+    return new SuccessResponse<PaginationResponse<ResponseBuyOrderDto>>(new (values)
     {
       Count = count,
       PageNumber = searchRequest.PageNumber,

@@ -2,6 +2,8 @@ using AutoMapper;
 using tenkiu.api.order.Models.Common;
 using tenkiu.api.order.Models.Dto.BuyOrder;
 using tenkiu.api.order.Models.Dto.BuyOrderDetail;
+using tenkiu.api.order.Models.Dto.BuySellAllocation;
+using tenkiu.api.order.Models.Dto.BuySellAllocation.BuyOrder;
 using tenkiu.api.order.Models.Dto.DeliveryPeriod;
 using tenkiu.api.order.Models.Dto.SellOrder;
 using tenkiu.api.order.Models.Dto.SellOrderDetail;
@@ -20,6 +22,7 @@ public class AutomapperProfile : Profile
     this.MapSellOrderPaymentHistoryToDtos();
     this.MapBuyOrderToDtos();
     this.MapBuyOrderDetailsToDtos();
+    this.MapBuySellOrderAllocationToDtos();
     this.MapDeliveryPeriodToDtos();
   }
 
@@ -148,5 +151,42 @@ public class AutomapperProfile : Profile
 
     this.CreateMap<SellOrderPaymentHistory, ResponseSellOrderPaymentHistoryDto>()
         .IncludeBase<SellOrderPaymentHistory, BaseSellOrderPaymentHistoryDto>();
+  }
+
+  private void MapBuySellOrderAllocationToDtos()
+  {
+    this.CreateMap<BuySellAllocation, BaseBuySellAllocationDto>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<BaseBuySellAllocationDto, BuySellAllocation>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<BuySellAllocation, CreateBuySellAllocationDto>()
+        .IncludeBase<BuySellAllocation, BaseBuySellAllocationDto>();
+
+    this.CreateMap<BuySellAllocation, ResponseBuySellAllocationDto>()
+        .IncludeBase<BuySellAllocation, BaseBuySellAllocationDto>();
+
+    this.CreateMap<BuySellAllocation, UpdateBuySellAllocationDto>()
+        .IncludeBase<BuySellAllocation, BaseBuySellAllocationDto>();
+
+    this.CreateMap<BuySellAllocation, BaseBuySellAllocationDto>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<BuySellAllocation, BaseBuyAllocationDto>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<BaseBuyAllocationDto, BuySellAllocation>()
+        .IgnoreAllNonExisting();
+
+    this.CreateMap<BuySellAllocation, CreateBuyAllocationDto>()
+        .IncludeBase<BuySellAllocation, BaseBuyAllocationDto>();
+
+    this.CreateMap<BuySellAllocation, UpdateBuyAllocationDto>()
+        .IncludeBase<BuySellAllocation, BaseBuyAllocationDto>();
+
+    this.CreateMap<CreateBuySellAllocationDto, CreateBuyAllocationDto>()
+        .IgnoreAllNonExisting()
+        .ReverseMap();
   }
 }

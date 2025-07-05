@@ -9,6 +9,11 @@ public class DeliveryPeriodService(
   IDeliveryPeriodRepository repository
 ) : DisposableBase, IDeliveryPeriodService
 {
+  public async Task<IEnumerable<DeliveryPeriod>> GetByIds(IEnumerable<int> ids)
+  {
+    return await repository.GetById(ids);
+  }
+
   public Task<DeliveryPeriod?> GetById(int id)
   {
     return repository.GetById(id);
