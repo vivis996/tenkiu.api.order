@@ -11,6 +11,15 @@ public class DeliveryPeriodAppService(
   IMapper mapper
 ) : DisposableBase, IDeliveryPeriodAppService
 {
+  public async Task<BaseResponse<IEnumerable<ResponseDeliveryPeriodDto>>> GetByIds(IEnumerable<int> ids)
+  {
+    var values = (await service.GetByIds(ids)).ToArray();
+    if (values.Length == 0)
+      return new SuccessResponse<IEnumerable<ResponseDeliveryPeriodDto>>(Array.Empty<ResponseDeliveryPeriodDto>()).AddMessage("No delivery periods found");
+    var mappedValues = mapper.Map<IEnumerable<ResponseDeliveryPeriodDto>>(values);
+    return new SuccessResponse<IEnumerable<ResponseDeliveryPeriodDto>>(mappedValues);
+  }
+
   public async Task<BaseResponse<ResponseDeliveryPeriodDto?>> GetById(int id)
   {
     var deliveryPeriod = await service.GetById(id);

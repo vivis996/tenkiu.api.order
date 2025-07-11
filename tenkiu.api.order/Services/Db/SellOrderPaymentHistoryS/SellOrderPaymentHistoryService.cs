@@ -21,12 +21,12 @@ public class SellOrderPaymentHistoryService(
     return await repository.GetList(x => x.SellOrderId == sellOrderId);
   }
 
-  public Task<SellOrderPaymentHistory> Create(CreateSellOrderPaymentHistoryDto value)
+  public Task<SellOrderPaymentHistory?> Create(CreateSellOrderPaymentHistoryDto value)
   {
     return repository.Create(value);
   }
 
-  public Task<SellOrderPaymentHistory> Update(UpdateSellOrderPaymentHistoryDto value)
+  public Task<SellOrderPaymentHistory?> Update(UpdateSellOrderPaymentHistoryDto value)
   {
     return repository.Update(value);
   }

@@ -76,20 +76,10 @@ public class SellOrderAppService(
   /// <returns>A response containing the ID of the created order, or a failure message if creation fails.</returns>
   public async Task<BaseResponse<int>> Create(CreateSellOrderDto value)
   {
-    var orderDetailDtos = value.OrderDetails ?? [];
-    if (!orderDetailDtos.Any())
-      return new FailureResponse<int>("Order details cannot be empty");
-    var isClientWithOneDeliveryPeriod = await service.IsClientWithOneDeliveryPeriod(value.IdClient, value.DeliveryPeriodId);
-    if (isClientWithOneDeliveryPeriod)
-      return new FailureResponse<int>("Client already has an order with this delivery period");
-    value.OrderDetails = [];
-    var order = mapper.Map<SellOrder>(value);
-    order.Hash = string.Empty;
-    var @object = await service.Create(order);
-    var orderDetails = await sellOrderDetailService.Create(order.Id, orderDetailDtos);
-    if (orderDetails is null || !orderDetails.Any() || orderDetails.Count() != orderDetailDtos.Count())
-      return new FailureResponse<int>("Failed to create order details");
-    return new SuccessResponse<int>(@object.Id);
+    var @object = await service.Create(value);
+    if (@object.order is null)
+      return new FailureResponse<int>(@object.message);
+    return new SuccessResponse<int>(@object.order.Id);
   }
 
   /// <summary>
@@ -107,7 +97,7 @@ public class SellOrderAppService(
       return new FailureResponse<bool>("Client already has an order with this delivery period");
     value.OrderDetails = [];
     var @object = await service.Update(value);
-    var orderDetails = await sellOrderDetailService.Update(@object.Id, orderDetailDtos);
+    var orderDetails = await sellOrderDetailService.UpdateAndDeleteNotListeItems(@object.Id, orderDetailDtos);
 
     return new SuccessResponse<bool>(@object is not null);
   }

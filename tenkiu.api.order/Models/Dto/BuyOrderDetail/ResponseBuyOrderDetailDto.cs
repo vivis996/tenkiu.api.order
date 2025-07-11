@@ -8,4 +8,5 @@ public class ResponseBuyOrderDetailDto : BaseBuyOrderDetailDto, IIdModel<int>
   /// Primary key of the purchase line item
   /// </summary>
   public int Id { get; set; }
+  public int PendingAllocation { get; set; }
 }

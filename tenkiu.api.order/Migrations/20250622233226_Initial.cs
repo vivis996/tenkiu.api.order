@@ -332,7 +332,7 @@ namespace tenkiu.api.order.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ID_Buy_Order_Detail = table.Column<int>(type: "int(11)", nullable: false),
                     ID_Sell_Order_Detail = table.Column<int>(type: "int(11)", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     Created_by = table.Column<int>(type: "int(11)", nullable: false),
                     Created_dt = table.Column<DateTime>(type: "timestamp", nullable: false),
                     Modified_by = table.Column<int>(type: "int(11)", nullable: true),
